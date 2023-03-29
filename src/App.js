@@ -130,12 +130,13 @@ Row.propTypes = {
     title: PropTypes.string.isRequired,
   }).isRequired,
 };
+
 function App() {
   const [search, setSearch] = useState("");
   const searchBoxRef = useRef();
   const [result, setResult] = useState([]);
   const [library, setLibrary] = useState([]);
-
+  const [metadata, setMetadata] = useState({});
   const [startIndex, setStartIndex] = useState(5);
 
   const [page, setPage] = useState(1);
@@ -154,6 +155,7 @@ function App() {
       .then((res) => res.json())
       .then((res) => {
         setLibrary(res.data);
+        setMetadata(res.metadata);
       })
       .catch((err) => console.log(err));
   };
@@ -256,9 +258,14 @@ function App() {
         <Typography variant="h5" component="h2">
           Book's
         </Typography>
-        <Typography variant="subtitle1" gutterBottom>
-          Result count: {library.length}
-        </Typography>
+        <div id="metadata">
+          <Typography variant="subtitle1" gutterBottom>
+            Result count: {library.length}
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            Most common author: {metadata?.mostCommonAuthor || ""}
+          </Typography>
+        </div>
         {library.length > 0 && renderTable()}
         {library.length > 0 && (
           <TablePagination
